@@ -1,0 +1,92 @@
+# Unified compose for the single EC2. Images are built in GitHub Actions and
+# published to GHCR (ghcr.io/scorejim/*); this file only pulls and runs them.
+# The EC2 needs just this `deploy/` directory (compose + nginx.conf + certs),
+# not the four source repos.
+#
+# Sized for a t3.small (2 vCPU / 2 GB). The two Spring Boot JVMs are capped at
+# 256 MB heap each (JAVA_TOOL_OPTIONS) and every container has a hard memory
+# ceiling, so the whole stack fits. Requires a ~2 GB swap file on the host as a
+# safety net — see README.md "Memory on t3.small".
+
+services:
+  proxy:
+    image: nginx:alpine
+    container_name: proxy
+    restart: unless-stopped
+    mem_limit: 32m
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    depends_on:
+      - portfolio
+      - neopick
+      - agentsaul
+      - assistant
+
+  portfolio:
+    image: ghcr.io/scorejim/personal-website:latest
+    container_name: portfolio
+    restart: unless-stopped
+    mem_limit: 32m
+    volumes:
+      # Override the image's TLS-onboarding nginx.conf: the proxy does TLS here.
+      - ./portfolio.conf:/etc/nginx/conf.d/default.conf:ro
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    mem_limit: 64m
+    command: redis-server --maxmemory 32mb --maxmemory-policy allkeys-lru
+
+  neopick:
+    image: ghcr.io/scorejim/neopick:latest
+    container_name: neopick
+    restart: unless-stopped
+    mem_limit: 512m
+    depends_on:
+      - redis
+    environment:
+      JAVA_TOOL_OPTIONS: "-Xmx256m -XX:MaxMetaspaceSize=160m"
+      SPRING_PROFILES_ACTIVE: prod
+      DATABASE_URL: ${NEOPICK_DB_URL}
+      DATABASE_USERNAME: ${NEOPICK_DB_USER}
+      DATABASE_PASSWORD: ${NEOPICK_DB_PASSWORD}
+      REDIS_HOST: redis
+      REDIS_SSL: "false"
+      JWT_SECRET: ${NEOPICK_JWT_SECRET}
+      # S3 / Aliyun SMS keys come from SSM or a gitignored .env on the box.
+
+  agentsaul:
+    image: ghcr.io/scorejim/agentsaul:latest
+    container_name: agentsaul
+    restart: unless-stopped
+    mem_limit: 512m
+    depends_on:
+      - redis
+    environment:
+      JAVA_TOOL_OPTIONS: "-Xmx256m -XX:MaxMetaspaceSize=160m"
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: ${AGENTSAUL_DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${AGENTSAUL_DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${AGENTSAUL_DB_PASSWORD}
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PASSWORD: ${AGENTSAUL_REDIS_PASSWORD:-}
+      AI_API_KEY: ${AI_API_KEY}
+      AI_BASE_URL: ${AI_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode}
+      AI_MODEL: ${AI_MODEL:-qwen3-vl-32b-thinking}
+
+  assistant:
+    image: ghcr.io/scorejim/ai-assistant:latest
+    container_name: assistant
+    restart: unless-stopped
+    mem_limit: 256m
+    environment:
+      AI_API_KEY: ${AI_API_KEY}
+      AI_BASE_URL: ${AI_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
+      AI_MODEL: ${AI_MODEL:-qwen3.8-27b}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-text-embedding-v3}
+      DATABASE_URL: ${ASSISTANT_DB_URL}
