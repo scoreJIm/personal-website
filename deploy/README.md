@@ -1,10 +1,8 @@
 # Unified AWS + Cloudflare Deployment
 
 Single-EC2 deployment for the whole portfolio — the website plus the three
-projects — behind Cloudflare.
-
-> **Status**: this is the *prepared* architecture. Actual AWS provisioning is
-> deferred until the projects are portfolio-ready and pushed to GitHub.
+projects — behind Cloudflare. PostgreSQL runs in a container on the box; there is
+no managed database (no RDS), keeping cost to a single EC2 instance.
 
 ## Architecture
 
@@ -21,40 +19,40 @@ EC2 t3.small ── nginx reverse proxy (route by Host)
         ├── jimmyweidev.com          → portfolio   (static site, :80)
         ├── neo.jimmyweidev.com      → NeoPick     (Spring Boot, :8080)
         ├── agent.jimmyweidev.com    → AgentSaul   (Spring AI,  :8080)
-        └── assistant.jimmyweidev.com → AI Assistant (FastAPI, :8000)
+        └── rag.jimmyweidev.com      → AI Assistant (FastAPI, :8000)
         │
         ▼
-RDS PostgreSQL (3 databases, pgvector) + S3 (media) + Redis (container)
+PostgreSQL (Docker, 3 databases, pgvector) + S3 (media) + Redis (container)
 ```
 
 ## Why this shape
 
 | Decision | Choice | Why |
 |----------|--------|-----|
-| Compute | **1 × EC2 `t3.small` (2 vCPU / 2 GB)** + Docker Compose | RDS is external, so the box only runs 2 JVMs + FastAPI + Redis + nginx. **Works only with JVM heap caps + mem limits + host swap** (see "Memory on t3.small") — untuned, the two JVMs eat ~1.4 GB alone and the box OOMs |
-| Database | **1 × RDS PostgreSQL `db.t4g.micro`**, 3 DBs | managed backups/upgrades; pgvector for the assistant |
+| Compute | **1 × EC2 `t3.small` (2 vCPU / 2 GB)** + Docker Compose | runs 2 JVMs + FastAPI + PostgreSQL + Redis + nginx in containers. **Works only with JVM heap caps + mem limits + host swap** (see "Memory on t3.small") — untuned it OOMs |
+| Database | **PostgreSQL in Docker** (`pgvector/pgvector:pg16`), 3 DBs | one container, no RDS cost; pgvector for the assistant |
 | Cache | Redis in a container (**not ElastiCache**) | ElastiCache min ~$12/mo, not worth it for a portfolio |
 | Image build | **GitHub Actions → GHCR** (not build-on-box) | Maven builds spike 1–1.5 GB; building two JVMs on the box OOMs it |
 | CDN / SSL / DNS | Cloudflare (free) | free SSL, hides the origin IP, DDoS |
-| Secrets | SSM Parameter Store (or gitignored `.env`) | free, keeps keys out of the repo |
-| **No** | NAT Gateway / ALB / EKS / Kafka / Lambda / ECS | each adds $10–40/mo with no benefit here |
+| Secrets | gitignored `.env` on the box | free, keeps keys out of the repo |
+| **No** | RDS / NAT Gateway / ALB / EKS / ElastiCache / Lambda / ECS | each adds $10–40/mo with no benefit here |
 
-**Monthly cost ≈ $30–32** (EC2 `t3.small` ~$15 + RDS `db.t4g.micro` ~$14); S3/Cloudflare/SSM/GHCR ≈ $0.
+**Monthly cost ≈ $15** (EC2 `t3.small` ~$15); S3/Cloudflare/GHCR ≈ $0.
 
 ## Memory on t3.small
 
 `t3.small` = 2 GB. This is the *floor*, not headroom — the stack only fits
-because of three deliberate moves already baked into `docker-compose.yml`:
+because of deliberate moves already baked into `docker-compose.yml`:
 
 | Lever | Value | Effect |
 |-------|-------|--------|
 | JVM heap cap | `-Xmx256m -XX:MaxMetaspaceSize=160m` per app | each Spring Boot JVM stays ~450 MB max instead of ~750 MB+ |
-| Container `mem_limit` | 512m / 512m / 256m / 64m / 32m / 32m | one container can't eat the whole box |
+| Container `mem_limit` | 512m / 512m / 256m / 256m / 64m / 32m / 32m | one container can't eat the whole box |
 | Redis `maxmemory` | 32mb allkeys-lru | Redis never grows past 32 MB |
 
-Budget: 2 JVMs (1024m) + assistant (256m) + redis (64m) + 2 nginx (64m) ≈
-**1.4 GB** + OS/Docker (~300m) ≈ **1.7 GB**, ~300 MB spare. **Add 2 GB swap**
-so a GC spike or image pull doesn't OOM-kill a container:
+Budget: 2 JVMs (1024m) + assistant (256m) + postgres (256m) + redis (64m) +
+2 nginx (64m) ≈ **1.66 GB** + OS/Docker (~300m) ≈ **1.96 GB**, thin margin.
+**Add 2 GB swap** so a GC spike or image pull doesn't OOM-kill a container:
 
 ```bash
 sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile
@@ -74,7 +72,7 @@ the JVMs uncapped: they *will* consume everything and take the box down.
 | `jimmyweidev.com` / `www` | portfolio |
 | `neo.jimmyweidev.com` | NeoPick |
 | `agent.jimmyweidev.com` | AgentSaul |
-| `assistant.jimmyweidev.com` | AI Assistant |
+| `rag.jimmyweidev.com` | AI Assistant |
 
 One Cloudflare **Origin CA** certificate covering `jimmyweidev.com` +
 `*.jimmyweidev.com` serves every subdomain.
@@ -83,16 +81,15 @@ One Cloudflare **Origin CA** certificate covering `jimmyweidev.com` +
 
 ### One-time provisioning
 
-1. **EC2**: `t3.small` (Ubuntu; security group allows 80/443 from Cloudflare
-   IP ranges, SSH 22 from your IP only). Then **enable a swap file** — see
-   "Memory on t3.small" below.
-2. **RDS**: PostgreSQL 16 `db.t4g.micro`, single-AZ, public access **off**.
-   Create 3 databases — `neopick`, `agent_saul`, `ai_assistant`. On
-   `ai_assistant` only, run `CREATE EXTENSION vector;` (pgvector ships with RDS
-   PG 14+). Security group: allow 5432 from the EC2 security group only.
+1. **EC2**: `t3.small` (Ubuntu 24.04; security group allows 80/443 from
+   Cloudflare IP ranges, SSH 22 from your IP only). Then **enable a swap file** —
+   see "Memory on t3.small".
+2. **Database**: no action — the compose file starts `pgvector/pgvector:pg16` and
+   creates `neopick` / `agentsaul` / `ai_assistant` (plus pgvector) from
+   `pg-init.sql` on first start.
 3. **S3**: one bucket for NeoPick media (e.g. `neopick-prod-media`).
-4. **Secrets**: LLM key / DB credentials / JWT secret in SSM Parameter Store, or
-   a gitignored `.env` next to this `deploy/` dir.
+4. **Secrets**: LLM key / DB password / JWT secret in a gitignored `.env` next to
+   this `deploy/` dir.
 5. **Cert**: drop the Origin CA `.pem` / `.key` into `deploy/certs/`.
 
 ### Routine deploy
@@ -122,7 +119,8 @@ Add the 5 proxied A records (table above) and set SSL mode **Full (Strict)**.
 - NeoPick's WebSocket (STOMP) needs `Upgrade` / `Connection` headers — already
   in `nginx.conf`.
 - **Redis is plaintext** (container, not exposed publicly): NeoPick prod reads
-  `REDIS_SSL=false` (default) — set `REDIS_SSL=true` only if you later move to
-  ElastiCache with encryption-in-transit.
+  `REDIS_SSL=false` (default).
+- **PostgreSQL is not exposed publicly** — it has no `ports:` mapping, so it's
+  reachable only from the other containers on the compose network.
 - **OTLP is disabled in prod** for both Java apps (no otel-collector in this
   stack); Prometheus metrics remain on `/actuator/prometheus` for debugging.
