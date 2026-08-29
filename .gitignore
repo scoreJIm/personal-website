@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+
+# TLS certificates / private keys — never commit
+certs/
+
+# Internal process docs — local only, not published
+CLAUDE.md
+manage.md
+append.md
+PROJECT_STATUS.md
+PROGRESS.md
+TODO.md
+Correction.md
+PLAN.md
+INTERVIEW_PREP.md
+Portfolio Deployment + Personal Branding + Productionization Task.md
+
+# Claude Code local config
+.claude/
