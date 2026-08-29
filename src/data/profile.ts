@@ -144,6 +144,7 @@ export const profile: Profile = {
         'Alipay RSA2 · WeChat Pay V3',
       ],
       github: 'https://github.com/scoreJIm/NeoPick',
+      demo: 'https://neo.jimmyweidev.com',
       caseStudy:
         'https://docs.google.com/document/d/1DgbCZrAgMl0y96YErauFIqbSMGr_9VPvwOjcKrBAnTE/edit?tab=t.0',
     },
@@ -162,6 +163,7 @@ export const profile: Profile = {
         'PostgreSQL ChatMemory',
       ],
       github: 'https://github.com/scoreJIm/AgentSaul',
+      demo: 'https://agent.jimmyweidev.com',
     },
     {
       name: 'AI Knowledge Assistant',
@@ -188,6 +190,7 @@ export const profile: Profile = {
         'Qwen-plus (grounded, streaming)',
       ],
       github: 'https://github.com/scoreJIm/ai-assistant',
+      demo: 'https://rag.jimmyweidev.com',
     },
   ],
 
