@@ -54,10 +54,10 @@ export const profile = {
   ],
   experience: {
     company: 'iSoftStone Information Technology',
-    role: 'Backend Engineer · Project Lead (vendor delivery)',
+    role: 'Backend Engineer · Project Lead (client delivery)',
     period: '2023 — present',
     summary:
-      'Project Lead in an outsourced delivery team, coordinating eight backend engineers for a client that defines the business requirements while our team owns implementation and delivery.',
+      'Project Lead in a client delivery team at a technology services company, coordinating eight backend engineers while our team owns implementation and delivery.',
     highlights: [
       'Translated client requirements into implementation work for road, transit, and facility-data platforms.',
       'Supported hiring, ran fortnightly team meetings and weekly reporting, and onboarded new engineers into active project work.',
