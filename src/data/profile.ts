@@ -26,8 +26,8 @@ export const profile = {
   linkedin: 'https://linkedin.com/in/weiweicareer',
   resume: '/Wei-Wei-Resume.pdf',
   proof: [
-    { value: '4 yrs', label: 'backend & product delivery' },
-    { value: '8', label: 'engineers led' },
+    { value: '3.5 yrs', label: 'commercial engineering experience' },
+    { value: '8-person', label: 'delivery team coordinated' },
     { value: '3', label: 'products built end to end' },
   ],
   services: [
@@ -54,14 +54,14 @@ export const profile = {
   ],
   experience: {
     company: 'iSoftStone Information Technology',
-    role: 'Backend Engineer',
+    role: 'Backend Engineer · Project Lead (vendor delivery)',
     period: '2023 — present',
     summary:
-      'Leading an eight-person backend team delivering geospatial data platforms. My work covers architecture, code review, technical interviews, mentoring, and delivery coordination.',
+      'Project Lead in an outsourced delivery team, coordinating eight backend engineers for a client that defines the business requirements while our team owns implementation and delivery.',
     highlights: [
-      'Built road, transit, and facility-data platforms handling million-record datasets.',
-      'Improved measured delivery velocity by 73% after redesigning workflow, CI/CD, and tooling.',
-      'Designed multi-source ingestion, data-quality plugins, and high-volume PostgreSQL processing.',
+      'Translated client requirements into implementation work for road, transit, and facility-data platforms.',
+      'Supported hiring, ran fortnightly team meetings and weekly reporting, and onboarded new engineers into active project work.',
+      'Designed multi-source ingestion, data-quality plugins, and high-volume PostgreSQL processing for million-record datasets.',
     ],
   },
   projects: [
