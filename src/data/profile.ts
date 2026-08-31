@@ -21,7 +21,7 @@ export const profile = {
     'Java backend engineering, AI application development, and the product judgement to take an idea from rough brief to working software.',
   availability: 'Open to Germany / Europe roles and selected remote contracts',
   location: 'Nanjing, China · Ready to relocate',
-  email: 'weiwei.eng@gmail.com',
+  email: 'vvlovqq@gmail.com',
   github: 'https://github.com/scoreJIm',
   linkedin: 'https://linkedin.com/in/weiweicareer',
   resume: '/Wei-Wei-Resume.pdf',
