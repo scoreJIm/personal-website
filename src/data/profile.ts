@@ -1,204 +1,109 @@
 export interface Project {
   name: string
-  tagline: string
+  label: string
+  thesis: string
   description: string
+  proof: string[]
   tech: string[]
   architecture: string
   diagram: string[]
   github: string
-  demo?: string
+  demo: string
   caseStudy?: string
 }
 
-export interface ExperienceItem {
-  company: string
-  role: string
-  duration: string
-  responsibilities: string[]
-  technologies: string[]
-}
-
-export interface SkillGroup {
-  group: string
-  skills: string[]
-}
-
-export interface Language {
-  name: string
-  level: string
-}
-
-export interface Profile {
-  name: string
-  nickname: string
-  title: string
-  intro: string
-  coreSkills: string[]
-  about: string[]
-  education: string[]
-  languages: Language[]
-  experience: ExperienceItem[]
-  skillGroups: SkillGroup[]
-  projects: Project[]
-  contact: {
-    email: string
-    phone: string
-    github: string
-    linkedin: string
-    location: string
-  }
-}
-
-export const profile: Profile = {
+export const profile = {
   name: 'Wei Wei',
   nickname: 'Jimmy',
-  title: 'Backend Engineer',
+  role: 'Software engineer · Backend & AI products',
+  headline: 'I build the systems behind useful products.',
   intro:
-    "Most of my work is Java and Spring Boot — data platforms, Postgres, Redis. Lately I've been building LLM apps too.",
-  coreSkills: [
-    'Java',
-    'Spring Boot',
-    'PostgreSQL',
-    'Redis',
-    'Docker',
-    'AWS',
-    'Python',
-    'RAG',
+    'Java backend engineering, AI application development, and the product judgement to take an idea from rough brief to working software.',
+  availability: 'Open to Germany / Europe roles and selected remote contracts',
+  location: 'Nanjing, China · Ready to relocate',
+  email: 'weiwei.eng@gmail.com',
+  github: 'https://github.com/scoreJIm',
+  linkedin: 'https://linkedin.com/in/weiweicareer',
+  resume: '/Wei-Wei-Resume.pdf',
+  proof: [
+    { value: '4 yrs', label: 'backend & product delivery' },
+    { value: '8', label: 'engineers led' },
+    { value: '3', label: 'products built end to end' },
   ],
-
-  about: [
-    'Backend engineer, nearly four years in. At iSoftStone I lead a team of eight building geospatial data platforms — road, transit, and facility data.',
-    'Outside work I built NeoPick, AgentSaul, and the AI assistant.',
-  ],
-
-  education: [
-    'B.Sc. Computer Science — Suzhou University (2016–2020)',
-    'Degree listed in the German Anabin database (H+), qualifying for the EU Blue Card pathway.',
-  ],
-
-  languages: [
-    { name: 'Chinese', level: 'Native (Mandarin)' },
-    { name: 'English', level: 'C1 — Business fluent' },
-    { name: 'German', level: 'A1 — working toward B1' },
-  ],
-
-  experience: [
+  services: [
     {
-      company: 'iSoftStone Information Technology',
-      role: 'Backend Engineer',
-      duration: 'Mar 2023 – Present',
-      technologies: ['Java', 'Spring Boot', 'Spring Cloud', 'PostgreSQL', 'Redis', 'Kafka', 'AWS', 'Docker'],
-      responsibilities: [
-        'Led a backend team of eight engineers building geospatial data platforms. I own the system architecture, code review, technical hiring, and mentoring; as the primary technical contact on the delivery side, I have kept the top client-satisfaction rating on the account.',
-        'Reworked the team’s development workflow and CI/CD pipeline, lifting per-engineer delivery velocity by 73% (Q2 2024 vs. Q1 2024 baseline). Recognized with the company’s Efficiency Improvement Award.',
-        'Built three million-record geospatial data platforms from scratch (road, transit, and facility data) for a national infrastructure client — writing the technical specifications, designing the database schemas, and training the operations team.',
-      ],
+      title: 'Backend systems',
+      copy: 'Java and Spring services, API design, PostgreSQL, Redis, messaging, testing, and deployment-ready foundations.',
+      fit: 'Best for platform work, integrations, and systems that need clean domain boundaries.',
+    },
+    {
+      title: 'AI product engineering',
+      copy: 'LLM applications with tool calling, RAG, streaming interfaces, evaluation, and practical failure handling.',
+      fit: 'Best for turning an AI proof of concept into a product people can actually use.',
+    },
+    {
+      title: 'Zero-to-one delivery',
+      copy: 'I connect product discovery, system design, implementation, and documentation instead of treating them as separate hand-offs.',
+      fit: 'Best for founders and teams with a clear problem but an unfinished technical path.',
     },
   ],
-
   skillGroups: [
-    { group: 'Languages', skills: ['Java', 'Python', 'SQL'] },
-    {
-      group: 'Backend',
-      skills: ['Spring Boot', 'Spring Cloud', 'Spring AI', 'LangChain4j', 'MyBatis', 'Quartz'],
-    },
-    {
-      group: 'Database',
-      skills: ['PostgreSQL', 'PostGIS', 'MySQL', 'Redis', 'Elasticsearch'],
-    },
-    { group: 'Messaging', skills: ['Apache Kafka', 'RabbitMQ'] },
-    { group: 'Cloud', skills: ['AWS', 'Docker', 'Kubernetes'] },
-    {
-      group: 'AI / LLM',
-      skills: ['RAG', 'Function Calling', 'PgVector', 'Vector Search', 'Embeddings'],
-    },
-    {
-      group: 'DevOps & Tools',
-      skills: ['Git', 'Maven', 'GitHub Actions', 'Agile / Scrum'],
-    },
+    { group: 'Backend', skills: ['Java', 'Spring Boot', 'PostgreSQL', 'Redis', 'Kafka'] },
+    { group: 'AI applications', skills: ['Spring AI', 'RAG', 'Tool calling', 'PgVector'] },
+    { group: 'Delivery', skills: ['Docker', 'AWS', 'GitHub Actions', 'Technical leadership'] },
   ],
-
+  experience: {
+    company: 'iSoftStone Information Technology',
+    role: 'Backend Engineer',
+    period: '2023 — present',
+    summary:
+      'Leading an eight-person backend team delivering geospatial data platforms. My work covers architecture, code review, technical interviews, mentoring, and delivery coordination.',
+    highlights: [
+      'Built road, transit, and facility-data platforms handling million-record datasets.',
+      'Improved measured delivery velocity by 73% after redesigning workflow, CI/CD, and tooling.',
+      'Designed multi-source ingestion, data-quality plugins, and high-volume PostgreSQL processing.',
+    ],
+  },
   projects: [
     {
       name: 'NeoPick',
-      tagline: 'Guitar lesson marketplace',
+      label: 'Product + full-stack engineering',
+      thesis: 'Make one-to-one guitar lessons flexible enough to fit real life.',
       description:
-        'Two-sided platform connecting students with guitar teachers — search, booking, payment, reviews, and real-time chat in one marketplace loop.',
-      tech: [
-        'Java 21',
-        'Spring Boot 3.3',
-        'PostgreSQL',
-        'Redis',
-        'WebSocket',
-        'JWT',
-        'AWS',
-        'Docker',
-        'Flyway',
-      ],
-      architecture: 'Hexagonal (Ports & Adapters) · Domain-Driven Design · Booking state machine',
-      diagram: [
-        'Client',
-        'REST + WebSocket API',
-        'Booking · Review · Payment (use cases)',
-        'PostgreSQL · Redis · AWS S3',
-        'Alipay RSA2 · WeChat Pay V3',
-      ],
+        'NeoPick began with user interviews: students found music schools expensive, rigid, and inconvenient. The product connects learners with independent guitar teachers around time, place, price, and teaching needs.',
+      proof: ['User research & personas', 'Teacher discovery', 'Booking state machine', 'Real-time chat'],
+      architecture: 'Product discovery · Marketplace domain · Booking workflow',
+      diagram: ['Discover a teacher', 'Choose time and place', 'Book a lesson', 'Learn and review'],
+      tech: ['Java 21', 'Spring Boot', 'PostgreSQL', 'Redis', 'React'],
       github: 'https://github.com/scoreJIm/NeoPick',
       demo: 'https://neo.jimmyweidev.com',
-      caseStudy:
-        'https://docs.google.com/document/d/1DgbCZrAgMl0y96YErauFIqbSMGr_9VPvwOjcKrBAnTE/edit?tab=t.0',
+      caseStudy: 'https://docs.google.com/document/d/1DgbCZrAgMl0y96YErauFIqbSMGr_9VPvwOjcKrBAnTE/edit?tab=t.0',
     },
     {
       name: 'AgentSaul',
-      tagline: 'LLM chat app with tool calling',
+      label: 'Java AI application',
+      thesis: 'A conversational agent that can do more than generate text.',
       description:
-        'A conversational app that combines an LLM with structured tool calling, multi-turn conversation memory, and SSE streaming.',
-      tech: ['Spring Boot 3.4', 'Spring AI 1.0', 'Qwen3 (DashScope)', 'MyBatis', 'Redis'],
-      architecture: 'Tool calling via @Tool + ToolCallback · Multi-turn memory · SSE streaming',
-      diagram: [
-        'User',
-        'Chat API (SSE streaming)',
-        'ChatClient + Function Calling (@Tool)',
-        'Qwen3 (DashScope) · Structured Output · Memory',
-        'PostgreSQL ChatMemory',
-      ],
+        'A Spring AI application focused on tool use, conversation memory, structured responses, and live streaming. The goal is a legible agent workflow, not a pile of AI buzzwords.',
+      proof: ['Tool calling', 'Structured output', 'Conversation memory', 'SSE streaming'],
+      architecture: 'Conversation · Intent · Tool execution · Structured response',
+      diagram: ['Message', 'Agent decision', 'Tool execution', 'Streaming response'],
+      tech: ['Spring AI', 'Qwen', 'Java', 'PostgreSQL', 'Redis'],
       github: 'https://github.com/scoreJIm/AgentSaul',
       demo: 'https://agent.jimmyweidev.com',
     },
     {
       name: 'AI Knowledge Assistant',
-      tagline: 'Python + RAG knowledge assistant',
+      label: 'Python AI product',
+      thesis: 'Ask questions of your own documents and see what the answer used.',
       description:
-        'A document question-answering app: upload a document, it gets chunked and embedded into pgvector, and questions are answered from the most relevant chunks with streaming responses.',
-      tech: [
-        'Python 3.12',
-        'FastAPI',
-        'SQLAlchemy 2.0',
-        'PostgreSQL + pgvector',
-        'DashScope (Qwen)',
-        'SSE',
-        'Pydantic v2',
-        'Docker',
-      ],
-      architecture:
-        'FastAPI (async) · RAG pipeline (chunking → embedding → vector search → grounded answer) · SSE streaming',
-      diagram: [
-        'Client',
-        'FastAPI (async)',
-        'Chunking → Embedding (text-embedding-v3)',
-        'PostgreSQL + pgvector (cosine)',
-        'Qwen-plus (grounded, streaming)',
-      ],
+        'A document assistant built around an explicit retrieval pipeline: ingest, chunk, embed, retrieve, and stream a grounded answer. Retrieval and agent behaviour stay separate by design.',
+      proof: ['Document ingestion', 'Vector retrieval', 'Grounded answers', 'Offline evaluation'],
+      architecture: 'Ingest · Chunk · Embed · Retrieve · Answer',
+      diagram: ['Upload', 'Index', 'Retrieve', 'Grounded answer'],
+      tech: ['FastAPI', 'Python', 'pgvector', 'React', 'Docker'],
       github: 'https://github.com/scoreJIm/ai-assistant',
       demo: 'https://rag.jimmyweidev.com',
     },
-  ],
-
-  contact: {
-    email: 'vvlovqq@gmail.com',
-    phone: '+86 180 5623 8261',
-    github: 'https://github.com/scoreJIm',
-    linkedin: 'https://linkedin.com/in/weiweicareer',
-    location: 'Nanjing, China · Relocation: ready for Germany',
-  },
+  ] as Project[],
 }
