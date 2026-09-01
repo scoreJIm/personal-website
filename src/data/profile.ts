@@ -48,9 +48,24 @@ export const profile = {
     },
   ],
   skillGroups: [
-    { group: 'Backend', skills: ['Java', 'Spring Boot', 'PostgreSQL', 'Redis', 'Kafka'] },
-    { group: 'AI applications', skills: ['Spring AI', 'RAG', 'Tool calling', 'PgVector'] },
-    { group: 'Delivery', skills: ['Docker', 'AWS', 'GitHub Actions', 'Technical leadership'] },
+    {
+      group: 'Backend core',
+      thesis: 'Model the domain, move data safely, and keep services understandable.',
+      skills: ['Java 21', 'Spring Boot', 'REST APIs', 'PostgreSQL', 'Redis', 'Kafka'],
+      evidence: 'NeoPick · client delivery systems',
+    },
+    {
+      group: 'AI product layer',
+      thesis: 'Add model capability without hiding retrieval, tools, or failure paths.',
+      skills: ['Spring AI', 'Python', 'FastAPI', 'RAG', 'pgvector', 'Tool calling', 'SSE'],
+      evidence: 'AgentSaul · TRACE',
+    },
+    {
+      group: 'Ship & operate',
+      thesis: 'Turn the implementation into a reachable, reviewable product.',
+      skills: ['TypeScript', 'React', 'Docker', 'AWS EC2', 'Nginx', 'Cloudflare', 'GitHub Actions'],
+      evidence: 'Three live demos · this portfolio',
+    },
   ],
   experience: {
     company: 'iSoftStone Information Technology',

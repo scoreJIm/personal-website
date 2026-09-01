@@ -87,6 +87,28 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .project-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 20px; position: relative; z-index: 1; }
 .project-links a { border-bottom: 1px solid rgba(255,255,255,.38); padding-bottom: 3px; font-size: .78rem; }
 
+.stack { position: relative; }
+.stack::before { content: 'BUILD PATH'; position: absolute; top: 148px; right: 0; color: rgba(244,245,241,.045); font: 500 clamp(4rem, 9vw, 8rem)/1 'IBM Plex Mono'; letter-spacing: -.08em; pointer-events: none; }
+.stack-heading { position: relative; z-index: 1; }
+.stack-trace { position: relative; border-top: 1px solid var(--line); }
+.stack-trace::before { content: ''; position: absolute; top: 0; bottom: 58px; left: 31px; width: 1px; background: linear-gradient(var(--blue), var(--copper)); }
+.stack-layer { position: relative; display: grid; grid-template-columns: 64px .9fr 1.35fr .7fr; gap: 28px; align-items: start; padding: 38px 0; border-bottom: 1px solid var(--line); }
+.stack-marker { position: relative; z-index: 1; width: 64px; min-height: 28px; display: flex; align-items: center; }
+.stack-marker::before { content: ''; width: 9px; height: 9px; margin-left: 27px; border: 2px solid var(--ink); border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 1px var(--blue), 0 0 0 7px var(--ink); }
+.stack-marker span { position: absolute; left: 0; transform: translateX(-100%); color: var(--muted); font: .62rem 'IBM Plex Mono'; opacity: 0; transition: opacity .2s, transform .2s; }
+.stack-layer:hover .stack-marker span { opacity: 1; transform: translateX(-70%); }
+.stack-purpose h3 { margin: 0 0 10px; font: 500 1.65rem 'Newsreader'; }
+.stack-purpose p { max-width: 300px; margin: 0; color: var(--muted); font-size: .88rem; line-height: 1.65; }
+.stack-tools { margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); list-style: none; border-top: 1px solid var(--line); }
+.stack-tools li { padding: 10px 8px 10px 0; border-bottom: 1px solid var(--line); color: #c7cbd2; font: .72rem 'IBM Plex Mono'; }
+.stack-tools li:nth-child(odd) { border-right: 1px solid var(--line); }
+.stack-tools li:nth-child(even) { padding-left: 12px; }
+.stack-evidence { margin: 0; color: var(--paper); font-size: .78rem; line-height: 1.55; }
+.stack-evidence span { display: block; margin-bottom: 9px; color: var(--copper); font: .6rem 'IBM Plex Mono'; letter-spacing: .12em; text-transform: uppercase; }
+.stack-output { margin-left: 31px; padding: 24px 0 0 34px; display: flex; align-items: center; gap: 16px; color: var(--muted); font: .68rem 'IBM Plex Mono'; text-transform: uppercase; letter-spacing: .06em; }
+.stack-output span { color: var(--copper); font-size: 1rem; }
+.stack-output p { margin: 0; }
+
 .experience-card { margin-left: 33.33%; padding: 44px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .experience-topline { display: flex; justify-content: space-between; gap: 20px; color: var(--muted); font: .72rem 'IBM Plex Mono'; text-transform: uppercase; }
 .experience-topline h3 { margin: 8px 0 0; color: var(--paper); font: 500 2rem 'Newsreader'; text-transform: none; }
@@ -126,6 +148,13 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .project-meta, .project-title, .project-description, .project-proof, .project-tech, .project-links { grid-column: 1; }
   .project-title h3 { font-size: 3.5rem; }
   .project-links { justify-content: flex-start; }
+  .stack::before { top: 100px; }
+  .stack-layer { grid-template-columns: 48px 1fr; gap: 22px; }
+  .stack-trace::before { left: 23px; }
+  .stack-marker { width: 48px; grid-row: span 3; }
+  .stack-marker::before { margin-left: 19px; }
+  .stack-tools, .stack-evidence { grid-column: 2; }
+  .stack-output { margin-left: 23px; }
   .experience-card { margin-left: 0; }
   .contact { padding-top: 100px; padding-bottom: 100px; }
 }
@@ -141,6 +170,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .service-row { gap: 16px; }
   .project-proof { grid-template-columns: 1fr; }
   .project-links { flex-direction: column; align-items: flex-start; }
+  .stack-layer { gap: 18px; }
+  .stack-tools { grid-template-columns: 1fr; }
+  .stack-tools li:nth-child(odd) { border-right: 0; }
+  .stack-tools li:nth-child(even) { padding-left: 0; }
   .experience-topline { flex-direction: column; }
   .site-footer { flex-direction: column; gap: 8px; }
 }
